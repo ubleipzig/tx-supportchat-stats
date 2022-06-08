@@ -1,0 +1,43 @@
+{
+  "name": "ubl/supportchat-stats",
+  "description": "Supportchat statistics for Typo3 Supportchat extension",
+  "type": "typo3-cms-extension",
+  "keywords": [
+    "TYPO3",
+    "CMS",
+    "extension",
+    "statistics",
+    "chat"
+  ],
+  "homepage": "https://github.com/ubleipzig/tx-supportchat-stats",
+  "license": ["GPL-2.0+"],
+  "version": "0.1.0",
+  "support": {
+    "issues": "https://github.com/ubleipzig/tx-supportchat-stats/issues"
+  },
+  "authors": [
+    {
+      "name": "Frank Morgner",
+      "email": "frank.morgner@uni-leipzig.de",
+      "role": "Developer"
+    }
+  ],
+  "repositories": [{
+    "type": "composer",
+    "url": "https://composer.typo3.org/"
+  }],
+  "require": {
+    "typo3/cms": "^8.7 || ^9.5",
+    "ubl/supportchat": "^2.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "Ubl\\SupportchatStats\\": "Classes/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Ubl\\SupportchatStats\\Tests\\": "Tests/"
+    }
+  }
+}
