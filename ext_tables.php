@@ -12,11 +12,14 @@ $boot = function () {
         =========================================================================== */
 
         \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerModule(
-            'Ubl.' . $_EXTKEY,
+            'Ubl.SupportchatStats',
             'system',
-            'tx_supportchat_stats_m1',
+            'supportchatstats',
             'top',
-            [],
+            [
+                'Chats' => 'display',
+                'Stats' => 'overview'
+            ],
             [
                 'access' => 'user,group',
                 'icon' => 'EXT:supportchat-stats/Resources/Public/Icons/module-supportchat-stats.svg',
@@ -24,6 +27,16 @@ $boot = function () {
             ]
         );
     }
+
+    /***************************************************************
+     * TCA
+     */
+
+    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addLLrefForTCAdescr(
+        'tx_supportchatstats',
+        'EXT:supportchat-stats/Resources/Private/Language/locallang.xlf'
+    );
+
 };
 
 $boot();

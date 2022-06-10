@@ -21,7 +21,7 @@
  */
 
 $EM_CONF[$_EXTKEY] = [
-    'title' => 'Support Chat',
+    'title' => 'Supportchat Stats',
     'description' => 'Supportchat statistics for Typo3 Supportchat extension',
     'category' => 'misc',
     'shy' => 0,
@@ -51,18 +51,18 @@ $EM_CONF[$_EXTKEY] = [
         ],
     ],
     'autoload' =>
-        [
-            'psr-4' =>
-                [
-                    'Ubl\\SupportchatStats\\' => 'Classes',
-                ]
-        ],
+    [
+        'psr-4' =>
+            [
+                'Ubl\\SupportchatStats\\' => 'Classes',
+            ]
+    ],
     'autoload-dev' =>
-        [
-            'psr-4' =>
-                [
-                    'Ubl\\SupportchatStats\\Tests' => 'Tests',
-                ]
-        ],
+    [
+        'psr-4' =>
+            [
+                'Ubl\\SupportchatStats\\Tests' => 'Tests',
+            ]
+    ]
 ];
 

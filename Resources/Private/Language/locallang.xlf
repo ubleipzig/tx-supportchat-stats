@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+    <file source-language="en" datatype="plaintext" original="messages" date="2022-05-17T15:40:05Z">
+        <header>
+            <generator>LFEditor</generator>
+        </header>
+        <body>
+            <trans-unit id="module.nav.chats">
+                <source>Chats</source>
+            </trans-unit>
+            <trans-unit id="module.nav.stats">
+                <source>Statistics</source>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
