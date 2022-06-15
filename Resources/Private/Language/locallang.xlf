@@ -1,15 +1,31 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <xliff version="1.0">
-    <file source-language="en" datatype="plaintext" original="messages" date="2022-05-17T15:40:05Z">
-        <header>
-            <generator>LFEditor</generator>
-        </header>
+    <file source-language="en" datatype="plaintext" original="messages" date="2022-05-17T15:40:05Z" product-name="supportchatstats">
+        <header/>
         <body>
             <trans-unit id="module.nav.chats">
                 <source>Chats</source>
             </trans-unit>
             <trans-unit id="module.nav.stats">
                 <source>Statistics</source>
+            </trans-unit>
+            <trans-unit id="module.chats.id">
+                <source>Chat ID</source>
+            </trans-unit>
+            <trans-unit id="module.chats.title">
+                <source>Chat history from</source>
+            </trans-unit>
+            <trans-unit id="module.stats.title">
+                <source>Chat statistics</source>
+            </trans-unit>
+            <trans-unit id="module.stats.datepicker.start">
+                <source>Start</source>
+            </trans-unit>
+            <trans-unit id="module.stats.datepicker.end">
+                <source>End</source>
+            </trans-unit>
+            <trans-unit id="module.stats.datepicker.submit">
+                <source>Display</source>
             </trans-unit>
         </body>
     </file>

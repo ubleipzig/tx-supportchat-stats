@@ -1,0 +1,52 @@
+#sc-stats .nav-current {
+    display: inline-block;
+    margin: 0 0.5em 0 0;
+}
+
+#sc-stats a.nav-paginator {
+    display: inline-block;
+    color: rgb(5, 47, 150);
+    margin: 0 0.5em 0 0;
+}
+#sc-stats a.nav-paginator:hover {
+    color: #404d6d;
+}
+
+#sc-stats a.nav-paginator:first-child {
+    margin: 0 0.75em 0 0;
+}
+
+#sc-stats #messages-table {
+    display: table;
+}
+
+#sc-stats #messages-header{
+    display: table-header-group;
+    background-color: #02133d;
+    font-weight: bold;
+    color: white;
+}
+
+#sc-stats .messages-header-cell{
+    display: table-cell;
+    padding: 0.5em 1em;
+    border-bottom: 1px solid black;
+}
+
+#sc-stats #messages-body {
+    display: table-row-group;
+}
+
+#sc-stats .messages-row {
+    display: table-row;
+}
+
+#sc-stats .messages-client {
+    background-color: #dcdcdc;
+}
+
+#sc-stats .messages-body-cell {
+    display: table-cell;
+    padding: 0.25em 0.75em 0.25em;
+}
+

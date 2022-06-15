@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Class BaseAdministrationController
  *
@@ -88,10 +90,10 @@ abstract class BaseAbstractController extends ActionController
         parent::initializeView($view);
 
         if ($view instanceof BackendTemplateView) {
-            $view->getModuleTemplate()->getDocHeaderComponent()->setMetaInformation([]);
             $view->getModuleTemplate()->getPageRenderer()->loadRequireJsModule('TYPO3/CMS/Backend/Modal');
+            $view->getModuleTemplate()->getPageRenderer()->loadRequireJsModule('TYPO3/CMS/Backend/DateTimePicker');
+            $view->getModuleTemplate()->getDocHeaderComponent()->disable();
         }
-
         $this->createMenu();
     }
 
@@ -118,7 +120,7 @@ abstract class BaseAbstractController extends ActionController
             $item = $menu->makeMenuItem()
                 ->setTitle(
                 // TODO: make this more flexible and changeable by TypoScript or an alternative language file
-                    LocalizationUtility::translate($action['label'], 'supportchat-stats')
+                    $this->translate($action['label'])
                 )
                 ->setHref($uriBuilder->reset()->uriFor($action['action'], [], $action['controller']))
                 ->setActive(
@@ -129,5 +131,17 @@ abstract class BaseAbstractController extends ActionController
         }
 
         $this->view->getModuleTemplate()->getDocHeaderComponent()->getMenuRegistry()->addMenu($menu);
+    }
+
+    /**
+     * Translate label
+     *
+     * @param string $key
+     * @param array|null $arguments
+     * @return string
+     */
+    protected function translate(string $key, array $arguments = null): string
+    {
+        return LocalizationUtility::translate($key, 'supportchat-stats', $arguments) ?? '';
     }
 }

@@ -32,7 +32,7 @@ TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTypoScriptSetup(
             layoutRootPath = EXT:supportchat-stats/Resources/Private/Backend/Layouts/
         }
         persistence {
-            # cat=module.tx_supportchat-stats//a; type=string; label=Default storage PID
+            # cat=module.tx_supportchatstats//a; type=string; label=Default storage PID
             storagePid =
         }
     }'

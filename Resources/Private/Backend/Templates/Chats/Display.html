@@ -1,5 +1,50 @@
+{namespace ubl=Ubl\SupportchatStats\ViewHelpers}
 <f:layout name="Default" />
 
-<f:section name="content">
+<f:section name="nav">
+    <!-- previous id -->
+    <f:if condition="{previousTenIds}">
+        <f:link.action action="display" arguments="{chatId : previousTenIds}" additionalAttributes="{class:'nav-paginator'}"><<</f:link.action>
+    </f:if>
+    <f:if condition="{previousId}">
+        <f:link.action action="display" arguments="{chatId : previousId}" additionalAttributes="{class:'nav-paginator'}"><</f:link.action>
+    </f:if>
+    <!-- current id -->
+    <span class="nav-current">
+        <f:translate key="module.chats.id" extensionName="supportchat-stats"/>: {currentId}
+    </span>
+    <!-- next id -->
+    <f:if condition="{subsequentId}">
+        <f:link.action action="display" arguments="{chatId : subsequentId}" additionalAttributes="{class:'nav-paginator'}">></f:link.action>
+    </f:if>
+    <f:if condition="{subsequentTenIds}">
+        <f:link.action action="display" arguments="{chatId : subsequentTenIds}" additionalAttributes="{class:'nav-paginator'}">>></f:link.action>
+    </f:if>
+</f:section>
 
+<f:section name="headline">
+    <h3>
+        <f:translate key="module.chats.title" extensionName="supportchat-stats"/>
+        <f:format.date format="d.m.Y">{messages.0.tstamp}</f:format.date>
+    </h3>
+</f:section>
+
+<f:section name="content">
+    <div id="messages-table">
+        <div id="messages-header">
+        </div>
+        <div id="messages-body">
+            <f:for each="{messages}" as="msg">
+                <div class="messages-row
+                    <f:if condition='{ubl:formatChatStaff(name: msg.name)}==false'>
+                    messages-client
+                    </f:if>
+                ">
+                    <div class="messages-body-cell"><f:format.date format="H:i:s">{msg.tstamp}</f:format.date></div>
+                    <div class="messages-body-cell">{msg.name}</div>
+                    <div class="messages-body-cell">{msg.message}</div>
+                </div>
+            </f:for>
+        </div>
+    </div>
 </f:section>

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Class BaseAdministrationController
  *
@@ -22,6 +23,10 @@
  */
 namespace Ubl\SupportchatStats\Controller;
 
+use TYPO3\CMS\Core\Page\PageRenderer;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+
 /**
  * Class ChatsController
  *
@@ -31,6 +36,34 @@ namespace Ubl\SupportchatStats\Controller;
  */
 class StatsController extends BaseAbstractController
 {
+    /**
+     * messagesRepository
+     *
+     * @var \Ubl\SupportchatStats\Domain\Repository\Chats
+     * @inject
+     */
+    protected $chatsRepository;
+
+
+    /**
+     * Set up the doc header properly here
+     *
+     * @param ViewInterface $view
+     */
+    protected function initializeView($view)
+    {
+        parent::initializeView($view);
+        $pathToJsLibrary = GeneralUtility::getIndpEnv('TYPO3_SITE_URL')
+            . ExtensionManagementUtility::siteRelPath('supportchat-stats') . 'Resources/Public/JavaScript/';
+        $pageRenderer = $this->view->getModuleTemplate()->getPageRenderer();
+        $pageRenderer->addJsFile($pathToJsLibrary . 'chart-js/chart.min.js');
+        $pageRenderer->addJSInlineCode('supportchat-stats', '
+            const scChart = new Chart(
+                document.getElementById("sc-stats-chart"),
+                config            
+            )
+        ');
+    }
 
     /**
      * Display content of a chat took place before
@@ -60,6 +93,34 @@ class StatsController extends BaseAbstractController
      */
     public function overviewAction()
     {
+        $pageRenderer = GeneralUtility::makeInstance(PageRenderer::class);
+        $chatsPerYear = $this->chatsRepository->countChatsPerYear();
+        $data = $labels = "";
+        foreach ($chatsPerYear AS $chat) {
+            $data .= $data . ', ' . $chat["cnt"];
+            $labels .= $labels .', ' . $chat["year"];
+        }
+        $pageRenderer->addJSInlineCode('supportchat-stats','
+            <script>    
+                const labels = [' . rtrim($labels, ", ") . '];
+                const data = {
+                  labels: labels,
+                  datasets: [{
+                    label: "My First dataset",
+                    backgroundColor: "rgb(255, 99, 132)",
+                    borderColor: "rgb(255, 99, 132)",
+                    data: [' . rtrim($data, ", ") . '],
+                }]  
+                };
+                
+                const config = {
+                    type: "line",
+                    data: data,
+                    options: {}
+                };
+            </script>
+        ');
+
         // Calendar picker / clickable /
             // Get MIN month and year
             // SELECT MONTH(FROM_UNIXTIME(crdate)),YEAR(FROM_UNIXTIME(crdate)), count(*) FROM tx_supportchat_chats GROUP BY 1,2;

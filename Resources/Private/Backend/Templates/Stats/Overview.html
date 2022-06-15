@@ -1,5 +1,64 @@
 <f:layout name="Default" />
 
-<f:section name="content">
+<f:section name="nav">
+    <!-- Form to select period -->
+    <f:form object="{constraint}" action="list" name="constraint" class="form-inline form-inline-spaced">
+        <!-- Date start -->
+        <div class="form-group">
+            <label for="manualDateStart"><f:translate key="module.stats.datepicker.start" extensionName="supportchat-stats"/></label>
+            <div class="input-group input-group-sm">
+                <f:form.textfield
+                        name="manualDateStart"
+                        value="{f:if(condition: constraint.manualDateStart, then: \"{f:format.date(format:'{settings.timeFormat} {settings.dateFormat}', date: '{constraint.manualDateStart}')}\")}"
+                id="manualDateStart"
+                class="form-control input-sm t3js-datetimepicker t3js-clearable"
+                data="{date-type: 'datetime'}"
+                />
+                <f:form.hidden
+                        property="manualDateStart"
+                        value="{f:if(condition: constraint.manualDateStart, then: \"{f:format.date(format:'c', date: '{constraint.manualDateStart}')}\")}"
+                />
+                <span class="input-group-btn">
+                        <label class="btn btn-default" for="manualDateStart">
+                            <span class="fa fa-calendar"></span>
+                        </label>
+                    </span>
+            </div>
+        </div>
+        <!-- Date end -->
+        <div class="form-group">
+            <label for="manualDateStop"><f:translate key="module.stats.datepicker.end" extensionName="supportchat-stats"/></label>
+            <div class="input-group input-group-sm">
+                <f:form.textfield
+                        name="manualDateStop"
+                        value="{f:format.date(format:'{settings.timeFormat} {settings.dateFormat}', date: '{constraint.manualDateStop}')}"
+                        id="manualDateStop"
+                        class="form-control input-sm t3js-datetimepicker t3js-clearable"
+                        data="{date-type: 'datetime'}"
+                />
+                <f:form.hidden property="manualDateStop"
+                               value="{f:format.date(format:'c', date: '{constraint.manualDateStop}')}"
+                />
+                <span class="input-group-btn">
+                        <label class="btn btn-default" for="manualDateStop">
+                            <span class="fa fa-calendar"></span>
+                        </label>
+                    </span>
+            </div>
+        </div>
+        <!-- Submit Button -->
+        <div class="form-group">
+            <f:form.submit id="submit-constraint" value="{f:translate(key: 'module.stats.datepicker.submit', extensionName:'supportchat-stats')}" class="btn btn-default btn-sm" />
+        </div>
+    </f:form>
+</f:section>
 
+<f:section name="headline">
+    <h3><f:translate key="module.stats.title" extensionName="supportchat-stats"/></h3>
+</f:section>
+
+<f:section name="content">
+    <div>
+        <canvas id="sc-stats-chart"></canvas>
+    </div>
 </f:section>

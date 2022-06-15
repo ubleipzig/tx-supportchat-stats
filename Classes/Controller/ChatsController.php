@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Class BaseAdministrationController
  *
@@ -44,27 +46,24 @@ class ChatsController extends BaseAbstractController
     /**
      * Display content of a chat took place before
      *
+     * @param int chatId
+     *
      * @access public
      * @return void
      */
-    public function displayAction()
+    public function displayAction(int $chatId = null)
     {
-        $chatPids = $this->messagesRepository->findAllChatPids();
-        $firstPid = (end($chatPids))["chat_pid"];
-        $lastPid = $chatPids[0]["chat_pid"];
-
-        $this->request = GeneralUtility::_GP('supportchatstats');
-        $currentPid = (isset($this->request['currentPid']))
-            ? filter_var($this->request['currentPid'], FILTER_SANITIZE_NUMBER_INT) : $lastPid;
+        $chatPids = array_column($this->messagesRepository->findAllChatPids(), 'chat_pid');
+        $currentPid = ($chatId != null)
+            ? (int)filter_var($chatId, FILTER_SANITIZE_NUMBER_INT) : (int)$chatPids[0];
+        $currentKey = array_search($currentPid, $chatPids);
 
         $messages = $this->messagesRepository->findMessagesByChatPid($currentPid);
-        var_dump($messages); exit;
-
-
-
-
-        // Previous Last Navigation
-
-        // Show Chat Content
+        $this->view->assign('messages', $messages);
+        $this->view->assign('currentId', $currentPid);
+        $this->view->assign('subsequentId', $chatPids[$currentKey-1]);
+        $this->view->assign('previousId', $chatPids[$currentKey+1]);
+        $this->view->assign('subsequentTenIds', $chatPids[$currentKey-10]);
+        $this->view->assign('previousTenIds', $chatPids[$currentKey+10]);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Class messages repository
+ * Class chats repository
  *
  * Copyright (C) Leipzig University Library 2022 <info@ub.uni-leipzig.de>
  *
@@ -27,55 +27,33 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\Generic\QuerySettingsInterface;
-use Ubl\Supportchat\Domain\Repository\MessagesRepository;
+use Ubl\Supportchat\Domain\Repository\ChatsRepository;
 
 /**
- * Class Messages
+ * Class Chats
  *
  * Extends the booking repository of the booking extension
  *
  * @package Ubl\SupportchatStats\Domain\Repository
  */
-class Messages extends MessagesRepository
+class Chats extends ChatsRepository
 {
     /**
-     * Find all chat pids in table
+     * Get amount of chats per year
      *
-     * @return object
+     * @return array
      * @access public
      */
-    public function findAllChatPids()
+    public function countChatsPerYear()
     {
-        $queryBuilder = $this->getConnectionForTable('tx_supportchat_messages');
+        $queryBuilder = $this->getConnectionForTable('tx_supportchat_chats');
         return $queryBuilder
-            ->select('chat_pid')
-            ->from('tx_supportchat_messages')
-            ->groupBy('chat_pid')
-            ->orderBy('chat_pid', 'DESC')
-            ->execute()
-            ->fetchAll();
-    }
-
-    /**
-     * Find all chat entires by a chat_pid
-     *
-     * @param int $chatPid
-     *
-     * @return object
-     * @access public
-     */
-    public function findMessagesByChatPid(int $chatPid)
-    {
-        $queryBuilder = $this->getConnectionForTable('tx_supportchat_messages');
-        return $queryBuilder
-            ->select('name', 'message', 'tstamp')
-            ->from('tx_supportchat_messages')
-            ->where(
-                $queryBuilder->expr()->eq(
-                    'chat_pid',
-                    $queryBuilder->createNamedParameter($chatPid, \PDO::PARAM_INT)
-            ))
-            ->orderBy('tstamp', 'ASC')
+            ->addSelectLiteral(
+                'YEAR(FROM_UNIXTIME(crdate)) AS year',
+                $queryBuilder->expr()->count('*', 'cnt')
+            )
+            ->from('tx_supportchat_chats')
+            ->groupBy('year')
             ->execute()
             ->fetchAll();
     }

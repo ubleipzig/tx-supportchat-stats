@@ -13,6 +13,30 @@
                 <source>Statistics</source>
                 <target>Statistik</target>
             </trans-unit>
+            <trans-unit id="module.chats.id">
+                <source>Chat ID</source>
+                <target>Chat Nr.</target>
+            </trans-unit>
+            <trans-unit id="module.chats.title">
+                <source>Chat history</source>
+                <target>Chatverlauf vom</target>
+            </trans-unit>
+            <trans-unit id="module.stats.title">
+                <source>Chat statistics</source>
+                <target>Chatstatistik</target>
+            </trans-unit>
+            <trans-unit id="module.stats.datepicker.start">
+                <source>Start</source>
+                <target>Beginn</target>
+            </trans-unit>
+            <trans-unit id="module.stats.datepicker.end">
+                <source>End</source>
+                <target>Ende</target>
+            </trans-unit>
+            <trans-unit id="module.stats.datepicker.submit">
+                <source>Display</source>
+                <target>Anzeigen</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
