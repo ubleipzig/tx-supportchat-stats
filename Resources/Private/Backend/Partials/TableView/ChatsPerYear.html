@@ -1,0 +1,12 @@
+<div class="view-data">
+    <div class="header">
+        <span><f:translate key="module.stats.year" extensionName="supportchat-stats"/></span>
+        <span><f:translate key="module.stats.amount.chats" extensionName="supportchat-stats"/></span>
+    </div>
+    <f:for each="{data}" as="elm">
+        <div class="body">
+            <span class="cell-date">{elm.year}</span>
+            <span class="cell-number">{elm.cnt}</span>
+        </div>
+    </f:for>
+</div>

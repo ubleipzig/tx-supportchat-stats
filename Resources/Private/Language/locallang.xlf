@@ -18,6 +18,21 @@
             <trans-unit id="module.stats.title">
                 <source>Chat statistics</source>
             </trans-unit>
+            <trans-unit id="module.stats.year">
+                <source>Year</source>
+            </trans-unit>
+            <trans-unit id="module.stats.month">
+                <source>Month</source>
+            </trans-unit>
+            <trans-unit id="module.stats.hour">
+                <source>Hour</source>
+            </trans-unit>
+            <trans-unit id="module.stats.weekday">
+                <source>Weekday</source>
+            </trans-unit>
+            <trans-unit id="module.stats.amount.chats">
+                <source>Amount of chats</source>
+            </trans-unit>
             <trans-unit id="module.stats.datepicker.start">
                 <source>Start</source>
             </trans-unit>
@@ -26,6 +41,18 @@
             </trans-unit>
             <trans-unit id="module.stats.datepicker.submit">
                 <source>Display</source>
+            </trans-unit>
+            <trans-unit id="module.stats.chatsperyear.title">
+                <source>Amount of chats per year</source>
+            </trans-unit>
+            <trans-unit id="module.stats.chatspermonth.title">
+                <source>Amount of chats per month</source>
+            </trans-unit>
+            <trans-unit id="module.stats.chatsperhour.title">
+                <source>Amount of chats per hour</source>
+            </trans-unit>
+            <trans-unit id="module.stats.chatsperweekday.title">
+                <source>Amount of chats per weekday</source>
             </trans-unit>
         </body>
     </file>

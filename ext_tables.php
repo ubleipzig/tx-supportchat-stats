@@ -18,7 +18,7 @@ $boot = function () {
             'top',
             [
                 'Chats' => 'display',
-                'Stats' => 'overview'
+                'Stats' => 'index'
             ],
             [
                 'access' => 'user,group',

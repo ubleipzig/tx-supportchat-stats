@@ -44,6 +44,13 @@ class StatsController extends BaseAbstractController
      */
     protected $chatsRepository;
 
+    /**
+     * Initial controller
+     *
+     * @var string $initController
+     * @access protected
+     */
+    protected $initController = "chatsPerYear";
 
     /**
      * Set up the doc header properly here
@@ -56,78 +63,143 @@ class StatsController extends BaseAbstractController
         $pathToJsLibrary = GeneralUtility::getIndpEnv('TYPO3_SITE_URL')
             . ExtensionManagementUtility::siteRelPath('supportchat-stats') . 'Resources/Public/JavaScript/';
         $pageRenderer = $this->view->getModuleTemplate()->getPageRenderer();
-        $pageRenderer->addJsFile($pathToJsLibrary . 'chart-js/chart.min.js');
-        $pageRenderer->addJSInlineCode('supportchat-stats', '
-            const scChart = new Chart(
-                document.getElementById("sc-stats-chart"),
-                config            
-            )
+        /**  @todo Integrate datalabels to chart
+        $pageRenderer->addRequireJsConfiguration([
+            'paths' => [
+                'datalabels' => $pathToJsLibrary . 'libs/chartjs-plugin-datalabels.min.js'
+            ],
+            'shim' => [
+                'datalabels' => ['exports' => 'ChartDataLabels']
+            ]
+        ]);*/
+        $pageRenderer->addJSInlineCode('supportchat-stats-chart', '
+            require(["' . $pathToJsLibrary . 'libs/chartjs.min.js"], function(Chart){
+                Chart.defaults.font.size = 16;
+                let scChart = new Chart(
+                    document.getElementById("sc-stats-chart").getContext("2d"),
+                    config            
+                );
+            });
         ');
     }
 
     /**
-     * Display content of a chat took place before
+     * Initializes the current action
      *
-     * @access public
      * @return void
      */
-    public function selectedPeriodAction()
+    public function indexAction()
     {
-        // Display statistic data of indicated period
-
-        // Display chat how en somme
-
-        // Display chat how many per month
-
-        // Display on which weekdays
-
-        // Display on which hours
-    }
-
-
-    /**
-     * Display content of a chat took place before
-     *
-     * @access public
-     * @return void
-     */
-    public function overviewAction()
-    {
-        $pageRenderer = GeneralUtility::makeInstance(PageRenderer::class);
-        $chatsPerYear = $this->chatsRepository->countChatsPerYear();
-        $data = $labels = "";
-        foreach ($chatsPerYear AS $chat) {
-            $data .= $data . ', ' . $chat["cnt"];
-            $labels .= $labels .', ' . $chat["year"];
+        $classNames = get_class_methods($this);
+        foreach ($classNames as $name) {
+            if (0 < preg_match('/^chats\w*$/', $name)) {
+                $statsMethods[] = $name;
+           }
         }
-        $pageRenderer->addJSInlineCode('supportchat-stats','
-            <script>    
-                const labels = [' . rtrim($labels, ", ") . '];
+        $stats = GeneralUtility::_GP('statsSelect')
+            ? filter_var(GeneralUtility::_GP('statsSelect'), FILTER_SANITIZE_STRING)
+            : $this->initController;
+        if (false === in_array($stats, $statsMethods)) {
+            throw new \InvalidArgumentException('Method: '. $stats .' is not registered as stats view');
+        }
+        $ret = $this->{$stats}();
+        $statsTitle = 'module.stats.' . strtolower($stats) . '.title';
+
+        $pageRenderer = $this->view->getModuleTemplate()->getPageRenderer();
+        $pageRenderer->addJSInlineCode('supportchat-stats-data','
+                const labels = [' . implode(', ', $ret['labels']) . '];
                 const data = {
                   labels: labels,
                   datasets: [{
-                    label: "My First dataset",
-                    backgroundColor: "rgb(255, 99, 132)",
-                    borderColor: "rgb(255, 99, 132)",
-                    data: [' . rtrim($data, ", ") . '],
-                }]  
+                    label: "' . $this->translate($statsTitle) . '",
+                    backgroundColor: "rgb(237, 118, 2)",
+                    borderColor: "rgb(237, 118, 2)",
+                    data: [' . implode(', ', $ret['data']) . ']
+                    }]  
                 };
-                
                 const config = {
-                    type: "line",
+                    type: "' . $ret['chart'] . '",
                     data: data,
+                    plugins: [],
                     options: {}
                 };
-            </script>
-        ');
+        ', true, true);
 
-        // Calendar picker / clickable /
-            // Get MIN month and year
-            // SELECT MONTH(FROM_UNIXTIME(crdate)),YEAR(FROM_UNIXTIME(crdate)), count(*) FROM tx_supportchat_chats GROUP BY 1,2;
-            // Get current
+        $this->view->assignMultiple([
+            'data' => $ret['result'],
+            'statsSelect' => $stats,
+            'statsOptions' => $this->getStatsOptions($statsMethods)
+        ]);
+    }
 
-        // Counted chat over all years
-        // SELECT MONTH(FROM_UNIXTIME(crdate)),YEAR(FROM_UNIXTIME(crdate)), count(*) FROM tx_supportchat_chats GROUP BY 1,2;
+    /**
+     * Display chats per hours
+     *
+     * @access public
+     * @return void
+     */
+    protected function chatsPerHour()
+    {
+    }
+
+    /**
+     * Display chats per month
+     *
+     * @access public
+     * @return void
+     */
+    protected function chatsPerMonth()
+    {
+    }
+
+    /**
+     * Display chat per weekday
+     *
+     * @access public
+     * @return void
+     */
+    protected function chatsPerWeekday()
+    {
+    }
+
+    /**
+     * Display content of a chat took place before
+     *
+     * @access protected
+     * @return array
+     */
+    protected function chatsPerYear(): array
+    {
+        $chatsPerYear = $this->chatsRepository->countChatsPerYear();
+        $data = $labels = [];
+        foreach ($chatsPerYear as $chat) {
+            $data[] = ($chat["cnt"]) ?: "0";
+            $labels[] = ($chat["year"]) ?: "";
+        }
+        return [
+            'chart' => 'line',
+            'labels' => $labels,
+            'data' => $data,
+            'result' => $chatsPerYear
+        ];
+
+    }
+
+    /**
+     * Get named and translated options for select box
+     *
+     * @param array $options
+     *
+     * @return array
+     * @access private
+     */
+    private function getStatsOptions(array $options): array
+    {
+        $o = [];
+        foreach ($options as $opt) {
+            $o[$opt] = $this->translate('module.stats.' . strtolower($opt) . '.title');
+        }
+        return $o;
     }
 
 }

@@ -113,7 +113,7 @@ abstract class BaseAbstractController extends ActionController
 
         $actions = [
             ['controller' => 'Chats', 'action' => 'display', 'label' => 'module.nav.chats'],
-            ['controller' => 'Stats', 'action' => 'overview', 'label' => 'module.nav.stats']
+            ['controller' => 'Stats', 'action' => 'index', 'label' => 'module.nav.stats']
         ];
 
         foreach ($actions as $action) {

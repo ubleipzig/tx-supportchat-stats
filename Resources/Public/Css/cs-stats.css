@@ -30,7 +30,7 @@
 #sc-stats .messages-header-cell{
     display: table-cell;
     padding: 0.5em 1em;
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid #02133d;
 }
 
 #sc-stats #messages-body {
@@ -49,4 +49,47 @@
     display: table-cell;
     padding: 0.25em 0.75em 0.25em;
 }
+
+#sc-stats .tbl .messages-body-cell {
+    text-align: right;
+}
+
+#sc-stats #sc-stats-chart {
+    width: 1000px !important;
+    height: 500px !important;
+}
+
+#sc-stats .view-chart {
+    display: inline-block;
+    float: left;
+}
+
+#sc-stats .view-data {
+    display: inline-block;
+    font-size: 1.125em;
+    margin: 2.75em 0 0 3em;
+}
+
+#sc-stats .view-data .header {
+    background-color: #02133d;
+    color: white;
+}
+
+#sc-stats .view-data .body:nth-child(odd) {
+    background-color: #f3f3f3
+}
+
+#sc-stats .view-data .body span:first-child {
+    background-color: #ed7602;
+}
+
+#sc-stats .view-data .body .cell-number {
+    float: right;
+}
+
+#sc-stats .view-data span {
+    display: inline-block;
+    padding: 0.375em 0.5em;
+}
+
 

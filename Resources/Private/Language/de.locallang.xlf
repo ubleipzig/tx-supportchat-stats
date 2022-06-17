@@ -25,6 +25,26 @@
                 <source>Chat statistics</source>
                 <target>Chatstatistik</target>
             </trans-unit>
+            <trans-unit id="module.stats.year">
+                <source>Year</source>
+                <target>Jahr</target>
+            </trans-unit>
+            <trans-unit id="module.stats.month">
+                <source>Month</source>
+                <target>Monat</target>
+            </trans-unit>
+            <trans-unit id="module.stats.hour">
+                <source>Hour</source>
+                <target>Stunde</target>
+            </trans-unit>
+            <trans-unit id="module.stats.weekday">
+                <source>Weekday</source>
+                <target>Wochentag</target>
+            </trans-unit>
+            <trans-unit id="module.stats.amount.chats">
+                <source>Amount of chats</source>
+                <target>Anzahl der Chats</target>
+            </trans-unit>
             <trans-unit id="module.stats.datepicker.start">
                 <source>Start</source>
                 <target>Beginn</target>
@@ -37,6 +57,23 @@
                 <source>Display</source>
                 <target>Anzeigen</target>
             </trans-unit>
+            <trans-unit id="module.stats.chatsperyear.title">
+                <source>Amount of chats per year</source>
+                <target>Anzahl der Chats im Jahr</target>
+            </trans-unit>
+            <trans-unit id="module.stats.chatspermonth.title">
+                <source>Amount of chats per month</source>
+                <target>Anzahl der Chats nach Monaten</target>
+            </trans-unit>
+            <trans-unit id="module.stats.chatsperhour.title">
+                <source>Amount of chats per hour</source>
+                <target>Anzahl der Chats nach Stunden</target>
+            </trans-unit>
+            <trans-unit id="module.stats.chatsperweekday.title">
+                <source>Amount of chats per weekday</source>
+                <target>Anzahl der Chats nach Wochentagen</target>
+            </trans-unit>
+
         </body>
     </file>
 </xliff>
