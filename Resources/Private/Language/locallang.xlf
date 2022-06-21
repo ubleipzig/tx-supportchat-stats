@@ -24,11 +24,75 @@
             <trans-unit id="module.stats.month">
                 <source>Month</source>
             </trans-unit>
+            <trans-unit id="module.stats.month1">
+                <source>January</source>
+            </trans-unit>
+            <trans-unit id="module.stats.month2">
+                <source>February</source>
+            </trans-unit>
+            <trans-unit id="module.stats.month3">
+                <source>March</source>
+            </trans-unit>
+            <trans-unit id="module.stats.month4">
+                <source>April</source>
+            </trans-unit>
+            <trans-unit id="module.stats.month5">
+                <source>May</source>
+            </trans-unit>
+            <trans-unit id="module.stats.month6">
+                <source>June</source>
+            </trans-unit>
+            <trans-unit id="module.stats.month7">
+                <source>July</source>
+            </trans-unit>
+            <trans-unit id="module.stats.month8">
+                <source>August</source>
+            </trans-unit>
+            <trans-unit id="module.stats.month9">
+                <source>September</source>
+            </trans-unit>
+            <trans-unit id="module.stats.month10">
+                <source>October</source>
+            </trans-unit>
+            <trans-unit id="module.stats.month11">
+                <source>November</source>
+            </trans-unit>
+            <trans-unit id="module.stats.month12">
+                <source>December</source>
+            </trans-unit>
+            <trans-unit id="module.stats.month1">
+                <source>January</source>
+            </trans-unit>
+            <trans-unit id="module.stats.month1">
+                <source>January</source>
+            </trans-unit>
+
             <trans-unit id="module.stats.hour">
                 <source>Hour</source>
             </trans-unit>
             <trans-unit id="module.stats.weekday">
                 <source>Weekday</source>
+            </trans-unit>
+            <trans-unit id="module.stats.weekday0">
+                <source>Monday</source>
+            </trans-unit>
+            <trans-unit id="module.stats.weekday1">
+                <source>Tuesday</source>
+            </trans-unit>
+            <trans-unit id="module.stats.weekday2">
+                <source>Wednesday</source>
+            </trans-unit>
+            <trans-unit id="module.stats.weekday3">
+                <source>Thursday</source>
+            </trans-unit>
+            <trans-unit id="module.stats.weekday4">
+                <source>Friday</source>
+            </trans-unit>
+            <trans-unit id="module.stats.weekday5">
+                <source>Saturday</source>
+            </trans-unit>
+            <trans-unit id="module.stats.weekday6">
+                <source>Sunday</source>
             </trans-unit>
             <trans-unit id="module.stats.amount.chats">
                 <source>Amount of chats</source>

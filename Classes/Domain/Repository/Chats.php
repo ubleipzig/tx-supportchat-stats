@@ -39,6 +39,90 @@ use Ubl\Supportchat\Domain\Repository\ChatsRepository;
 class Chats extends ChatsRepository
 {
     /**
+     * Get amount of chats per hour
+     *
+     * @param int $startTS
+     * @param int $endTS
+     *
+     * @return array
+     * @access public
+     */
+    public function countChatsPerHour(int $startTS = null, int $endTS = null)
+    {
+        $queryBuilder = $this->getConnectionForTable('tx_supportchat_chats');
+        $queryBuilder->addSelectLiteral(
+                'DATE_FORMAT(FROM_UNIXTIME(crdate), "%H") AS hour',
+                $queryBuilder->expr()->count('*', 'cnt')
+            )
+            ->from('tx_supportchat_chats')
+            ->groupBy('hour');
+        if ($startTS && $endTS) {
+            $expr = $queryBuilder->expr();
+            $queryBuilder->where(
+              $expr->gte('crdate', $queryBuilder->createNamedParameter($startTS, Connection::PARAM_INT)),
+              $expr->lte('crdate', $queryBuilder->createNamedParameter($endTS, Connection::PARAM_INT))
+            );
+        }
+        return $queryBuilder->execute()->fetchAll();
+    }
+
+    /**
+     * Get amount of chats per month
+     *
+     * @param int $startTS
+     * @param int $endTS
+     *
+     * @return array
+     * @access public
+     */
+    public function countChatsPerMonth(int $startTS = null, int $endTS = null)
+    {
+        $queryBuilder = $this->getConnectionForTable('tx_supportchat_chats');
+        $queryBuilder->addSelectLiteral(
+                'MONTH(FROM_UNIXTIME(crdate)) AS month',
+                $queryBuilder->expr()->count('*', 'cnt')
+            )
+            ->from('tx_supportchat_chats')
+            ->groupBy('month');
+        if ($startTS && $endTS) {
+            $expr = $queryBuilder->expr();
+            $queryBuilder->where(
+                $expr->gte('crdate', $queryBuilder->createNamedParameter($startTS, Connection::PARAM_INT)),
+                $expr->lte('crdate', $queryBuilder->createNamedParameter($endTS, Connection::PARAM_INT))
+            );
+        }
+        return $queryBuilder->execute()->fetchAll();
+    }
+
+    /**
+     * Get amount of chats per weekday
+     *
+     * @param int $startTS
+     * @param int $endTS
+     *
+     * @return array
+     * @access public
+     */
+    public function countChatsPerWeekday(int $startTS = null, int $endTS = null)
+    {
+        $queryBuilder = $this->getConnectionForTable('tx_supportchat_chats');
+        return $queryBuilder->addSelectLiteral(
+                'WEEKDAY(FROM_UNIXTIME(crdate)) AS weekday',
+                $queryBuilder->expr()->count('*', 'cnt')
+            )
+            ->from('tx_supportchat_chats')
+            ->groupBy('weekday');
+        if ($startTS && $endTS) {
+            $expr = $queryBuilder->expr();
+            $queryBuilder->where(
+                $expr->gte('crdate', $queryBuilder->createNamedParameter($startTS, Connection::PARAM_INT)),
+                $expr->lte('crdate', $queryBuilder->createNamedParameter($endTS, Connection::PARAM_INT))
+            );
+        }
+        return $queryBuilder->execute()->fetchAll();
+    }
+
+    /**
      * Get amount of chats per year
      *
      * @return array

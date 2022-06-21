@@ -1,0 +1,16 @@
+<f:for each="{data}" as="elm" iteration="iterator">
+    <f:if condition="{iterator.index}==0 OR {iterator.index}==12">
+    <div class="view-data">
+        <div class="header">
+            <span><f:translate key="module.stats.hour" extensionName="supportchat-stats"/></span>
+            <span><f:translate key="module.stats.amount.chats" extensionName="supportchat-stats"/></span>
+        </div>
+    </f:if>
+        <div class="body">
+            <span class="cell-date">{elm.hour}:00</span>
+            <span class="cell-number">{elm.cnt}</span>
+        </div>
+    <f:if condition="{iterator.index}==11 OR {iterator.index}==23">
+        </div>
+    </f:if>
+</f:for>

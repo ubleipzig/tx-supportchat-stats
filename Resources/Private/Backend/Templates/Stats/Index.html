@@ -5,52 +5,54 @@
     <f:form object="{constraint}" action="index" name="constraint" class="form-inline form-inline-spaced">
         <!-- Select chart -->
         <div class="form-group">
-            <label for="chartSelect"><f:translate key="module.stats.chart.select" extensionName="supportchat-stats"/></label>
-                <f:form.select name="chartSelect" options="{statsOptions}" value="{statsSelect}"></f:form.select>
+            <label for="statsSelect"><f:translate key="module.stats.chart.select" extensionName="supportchat-stats"/></label>
+                <f:form.select name="statsSelect" options="{statsOptions}" value="{statsSelect}"></f:form.select>
         </div>
-
 
         <!-- Date start -->
         <div class="form-group">
-            <label for="manualDateStart"><f:translate key="module.stats.datepicker.start" extensionName="supportchat-stats"/></label>
+            <label for="dateStart"><f:translate key="module.stats.datepicker.start" extensionName="supportchat-stats"/></label>
             <div class="input-group input-group-sm">
                 <f:form.textfield
-                        name="manualDateStart"
-                        value="{f:if(condition: constraint.manualDateStart, then: \"{f:format.date(format:'{settings.timeFormat} {settings.dateFormat}', date: '{constraint.manualDateStart}')}\")}"
-                id="manualDateStart"
-                class="form-control input-sm t3js-datetimepicker t3js-clearable"
-                data="{date-type: 'datetime'}"
+                    id="dateStart"
+                    name="dateStart"
+                    value="{f:if(condition: periodParameter.start, then: \"{f:format.date(format:'d.m.Y', date: '{periodParameter.start}')}\")}"
+                    additionalAttributes="{'autocomplete': 'off'}"
+                    class="form-control input-sm t3js-datetimepicker t3js-clearable"
+                    data="{date-type: 'date'}"
                 />
                 <f:form.hidden
-                        property="manualDateStart"
-                        value="{f:if(condition: constraint.manualDateStart, then: \"{f:format.date(format:'c', date: '{constraint.manualDateStart}')}\")}"
+                    property="dateStart"
+                    value="{periodParameter.start}"
                 />
                 <span class="input-group-btn">
-                        <label class="btn btn-default" for="manualDateStart">
-                            <span class="fa fa-calendar"></span>
-                        </label>
-                    </span>
+                    <label class="btn btn-default" for="dateStart">
+                        <span class="fa fa-calendar"></span>
+                    </label>
+                </span>
             </div>
         </div>
         <!-- Date end -->
         <div class="form-group">
-            <label for="manualDateStop"><f:translate key="module.stats.datepicker.end" extensionName="supportchat-stats"/></label>
+            <label for="dateStop"><f:translate key="module.stats.datepicker.end" extensionName="supportchat-stats"/></label>
             <div class="input-group input-group-sm">
                 <f:form.textfield
-                        name="manualDateStop"
-                        value="{f:format.date(format:'{settings.timeFormat} {settings.dateFormat}', date: '{constraint.manualDateStop}')}"
-                        id="manualDateStop"
+                        id="dateStop"
+                        name="dateStop"
+                        value="{f:if(condition: periodParameter.end, then: \"{f:format.date(format:'d.m.Y', date: '{periodParameter.end}- 2 hours')}\")}"
+                        additionalAttributes="{'autocomplete': 'off'}"
                         class="form-control input-sm t3js-datetimepicker t3js-clearable"
-                        data="{date-type: 'datetime'}"
+                        data="{date-type: 'date'}"
                 />
-                <f:form.hidden property="manualDateStop"
-                               value="{f:format.date(format:'c', date: '{constraint.manualDateStop}')}"
+                <f:form.hidden
+                        property="dateStop"
+                        value="{periodParameter.end}"
                 />
                 <span class="input-group-btn">
-                        <label class="btn btn-default" for="manualDateStop">
-                            <span class="fa fa-calendar"></span>
-                        </label>
-                    </span>
+                    <label class="btn btn-default" for="dateStop">
+                        <span class="fa fa-calendar"></span>
+                    </label>
+                </span>
             </div>
         </div>
         <!-- Submit Button -->
@@ -69,8 +71,6 @@
         <canvas id="sc-stats-chart" aria-label="" role="img"></canvas>
         <f:format.raw>{jsChartCode}</f:format.raw>
     </div>
-
-    <f:if condition="{statsSelect} == 'chatsPerYear'">
-        <f:render partial="TableView/ChatsPerYear" arguments="{data: data}" />
-    </f:if>
+    <f:variable name="partialTableView"><f:format.case mode="capital">{statsSelect}</f:format.case></f:variable>
+    <f:render partial="TableView/{partialTableView}" arguments="{data: data}" />
 </f:section>

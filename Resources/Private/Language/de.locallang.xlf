@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <xliff version="1.0">
     <file source-language="en" target-language="de" datatype="plaintext" original="messages" date="2020-05-03T18:08:08Z">
-        <header>
-            <generator>LFEditor</generator>
-        </header>
         <body>
             <trans-unit id="module.nav.chats">
                 <source>Chats</source>
@@ -33,6 +30,54 @@
                 <source>Month</source>
                 <target>Monat</target>
             </trans-unit>
+            <trans-unit id="module.stats.month1">
+                <source>January</source>
+                <target>Januar</target>
+            </trans-unit>
+            <trans-unit id="module.stats.month2">
+                <source>February</source>
+                <target>Februar</target>
+            </trans-unit>
+            <trans-unit id="module.stats.month3">
+                <source>March</source>
+                <target>März</target>
+            </trans-unit>
+            <trans-unit id="module.stats.month4">
+                <source>April</source>
+                <target>April</target>
+            </trans-unit>
+            <trans-unit id="module.stats.month5">
+                <source>May</source>
+                <target>Mai</target>
+            </trans-unit>
+            <trans-unit id="module.stats.month6">
+                <source>June</source>
+                <target>Juni</target>
+            </trans-unit>
+            <trans-unit id="module.stats.month7">
+                <source>July</source>
+                <target>Juli</target>
+            </trans-unit>
+            <trans-unit id="module.stats.month8">
+                <source>August</source>
+                <target>August</target>
+            </trans-unit>
+            <trans-unit id="module.stats.month9">
+                <source>September</source>
+                <target>September</target>
+            </trans-unit>
+            <trans-unit id="module.stats.month10">
+                <source>October</source>
+                <target>Oktober</target>
+            </trans-unit>
+            <trans-unit id="module.stats.month11">
+                <source>November</source>
+                <target>November</target>
+            </trans-unit>
+            <trans-unit id="module.stats.month12">
+                <source>December</source>
+                <target>Dezember</target>
+            </trans-unit>
             <trans-unit id="module.stats.hour">
                 <source>Hour</source>
                 <target>Stunde</target>
@@ -40,6 +85,34 @@
             <trans-unit id="module.stats.weekday">
                 <source>Weekday</source>
                 <target>Wochentag</target>
+            </trans-unit>
+            <trans-unit id="module.stats.weekday0">
+                <source>Monday</source>
+                <target>Montag</target>
+            </trans-unit>
+            <trans-unit id="module.stats.weekday1">
+                <source>Tuesday</source>
+                <target>Dienstag</target>
+            </trans-unit>
+            <trans-unit id="module.stats.weekday2">
+                <source>Wednesday</source>
+                <target>Mittwoch</target>
+            </trans-unit>
+            <trans-unit id="module.stats.weekday3">
+                <source>Thursday</source>
+                <target>Donnerstag</target>
+            </trans-unit>
+            <trans-unit id="module.stats.weekday4">
+                <source>Friday</source>
+                <target>Freitag</target>
+            </trans-unit>
+            <trans-unit id="module.stats.weekday5">
+                <source>Saturday</source>
+                <target>Samstag</target>
+            </trans-unit>
+            <trans-unit id="module.stats.weekday6">
+                <source>Sunday</source>
+                <target>Sonntag</target>
             </trans-unit>
             <trans-unit id="module.stats.amount.chats">
                 <source>Amount of chats</source>

@@ -50,6 +50,14 @@ abstract class BaseAbstractController extends ActionController
         = \TYPO3\CMS\Backend\View\BackendTemplateView::class;
 
     /**
+     * Extension namespace
+     *
+     * @var string $extensionNamespace
+     * @access protected
+     */
+    protected $extensionNamespace = "tx_supportchatstats";
+
+    /**
      * Pageinfo to check access
      *
      * @var mixed

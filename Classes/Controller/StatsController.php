@@ -23,9 +23,12 @@ declare(strict_types=1);
  */
 namespace Ubl\SupportchatStats\Controller;
 
+use Http\Exception\UnexpectedValueException;
+use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Page\PageRenderer;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 
 /**
  * Class ChatsController
@@ -51,6 +54,14 @@ class StatsController extends BaseAbstractController
      * @access protected
      */
     protected $initController = "chatsPerYear";
+
+    /**
+     * Get variables
+     *
+     * @var array|null $getVars
+     * @access protected
+     */
+    private $getVars = null;
 
     /**
      * Set up the doc header properly here
@@ -90,14 +101,15 @@ class StatsController extends BaseAbstractController
      */
     public function indexAction()
     {
+        $this->getVars = GeneralUtility::_GP($this->extensionNamespace . '_' . strtolower(GeneralUtility::_GP('M')));
         $classNames = get_class_methods($this);
         foreach ($classNames as $name) {
             if (0 < preg_match('/^chats\w*$/', $name)) {
                 $statsMethods[] = $name;
            }
         }
-        $stats = GeneralUtility::_GP('statsSelect')
-            ? filter_var(GeneralUtility::_GP('statsSelect'), FILTER_SANITIZE_STRING)
+        $stats = $this->getVars['statsSelect']
+            ? filter_var($this->getVars['statsSelect'], FILTER_SANITIZE_STRING)
             : $this->initController;
         if (false === in_array($stats, $statsMethods)) {
             throw new \InvalidArgumentException('Method: '. $stats .' is not registered as stats view');
@@ -121,14 +133,15 @@ class StatsController extends BaseAbstractController
                     type: "' . $ret['chart'] . '",
                     data: data,
                     plugins: [],
-                    options: {}
+                    options: { ' . ($ret['options'] ?: '')  . '}
                 };
         ', true, true);
 
         $this->view->assignMultiple([
             'data' => $ret['result'],
             'statsSelect' => $stats,
-            'statsOptions' => $this->getStatsOptions($statsMethods)
+            'statsOptions' => $this->getStatsOptions($statsMethods),
+            'periodParameter' => $this->getSelectPeriodParameter(),
         ]);
     }
 
@@ -140,6 +153,23 @@ class StatsController extends BaseAbstractController
      */
     protected function chatsPerHour()
     {
+        $periodParams = $this->getSelectPeriodParameter();
+        $chatsPerHour = (false !== $periodParams)
+            ? $this->chatsRepository->countChatsPerHour(
+                $this->getTimestamp($periodParams['start']),
+                $this->getTimestamp($periodParams['end'])
+            ) : $this->chatsRepository->countChatsPerHour();
+        $data = $labels = [];
+        foreach ($chatsPerHour as $chat) {
+            $data[] = ($chat["cnt"]) ?: "0";
+            $labels[] = $chat['hour'];
+        }
+        return [
+            'chart' => 'bar',
+            'labels' => $labels,
+            'data' => $data,
+            'result' => $chatsPerHour
+        ];
     }
 
     /**
@@ -150,6 +180,23 @@ class StatsController extends BaseAbstractController
      */
     protected function chatsPerMonth()
     {
+        $periodParams = $this->getSelectPeriodParameter();
+        $chatsPerMonth = (false !== $periodParams)
+            ? $this->chatsRepository->countChatsPerMonth(
+                $this->getTimestamp($periodParams['start']),
+                $this->getTimestamp($periodParams['end'])
+            ) : $this->chatsRepository->countChatsPerMonth();
+        $data = $labels = [];
+        foreach ($chatsPerMonth as $chat) {
+            $data[] = ($chat["cnt"]) ?: "0";
+            $labels[] = '"' . $this->translate('module.stats.month' . $chat['month']) . '"' ;
+        }
+        return [
+            'chart' => 'bar',
+            'labels' => $labels,
+            'data' => $data,
+            'result' => $chatsPerMonth
+        ];
     }
 
     /**
@@ -158,8 +205,25 @@ class StatsController extends BaseAbstractController
      * @access public
      * @return void
      */
-    protected function chatsPerWeekday()
+    protected function chatsPerWeekday(): array
     {
+        $periodParams = $this->getSelectPeriodParameter();
+        $chatsPerWeekday = (false !== $periodParams)
+            ? $this->chatsRepository->countChatsPerWeekday(
+                $this->getTimestamp($periodParams['start']),
+                $this->getTimestamp($periodParams['end'])
+            ) : $this->chatsRepository->countChatsPerWeekday();
+        $data = $labels = [];
+        foreach ($chatsPerWeekday as $chat) {
+            $data[] = ($chat["cnt"]) ?: "0";
+            $labels[] = '"' . $this->translate('module.stats.weekday' . $chat["weekday"]) . '"' ;
+        }
+        return [
+            'chart' => 'bar',
+            'labels' => $labels,
+            'data' => $data,
+            'result' => $chatsPerWeekday
+        ];
     }
 
     /**
@@ -202,4 +266,69 @@ class StatsController extends BaseAbstractController
         return $o;
     }
 
+    /**
+     * Get timestamps
+     *
+     * @return bool|array    Return timestamps, if no set false
+     * @access private
+     */
+    private function getSelectPeriodParameter()
+    {
+        if ($this->getVars == null) {
+            throw new UnexpectedValueException('GET/POST parameters have to be evaluated by extension.');
+        }
+        $startDate = ($this->getVars["constraint"]["dateStart"]) ?: null;
+        $stopDate = ($this->getVars["constraint"]["dateStop"])
+            ? date("Y-m-d", strtotime($this->getVars["constraint"]["dateStop"])) . "T23:59:59Z" : null;
+        // Evaluate if select with where on timestamps should be taken.
+        if (!$startDate && !$stopDate) {
+            return false;
+        } else if ($startDate && !$stopDate) {
+            if ($this->isTypo3VersionCompatible("9.5.0")) {
+                $context = GeneralUtility::makeInstance(Context::class);
+                $timezone = $context->getPropertyFromAspect('date', 'timezone');
+            } else {
+                $timezone = ($GLOBALS['TYPO3_CONF_VARS']['SYS']['phpTimeZone']) ?: '';
+            }
+            $d = new \DateTime("now", new \DateTimeZone($timezone));
+            $stopDate = $d->format('Y-m-d\TH:i:s\Z');
+        } else if (!$startDate && $stopDate) {
+            $startDate = "1970-01-01T00:00:00Z";
+        }
+        return [
+          'start' => $startDate,
+          'end' => $stopDate,
+        ];
+    }
+
+    /**
+     * Converts datetime format to timestamp
+     *
+     * @param string $date
+     *
+     * @return int
+     * @access private
+     */
+    private function getTimestamp(string $date): int
+    {
+        $d = new \DateTime($date);
+        return (int) $d->format("U");
+    }
+
+    /**
+     * Check required version of typo3
+     *
+     * @param string $version A valid typo3 version string for evaluation
+     *
+     * @return bool
+     * @access private
+     */
+    private static function isTypo3VersionCompatible($version): bool
+    {
+        if (false === preg_match('/^\d{1,3}\.\d{1,3}(\.\d{1,3})?$/', $version)) {
+            throw \InvalidArgumentException('No correct format of typo3 version number');
+        }
+        return VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version)
+            >= VersionNumberUtility::convertVersionNumberToInteger($version);
+    }
 }

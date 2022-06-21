@@ -18,6 +18,7 @@
 
 #sc-stats #messages-table {
     display: table;
+    table-layout: fixed;
 }
 
 #sc-stats #messages-header{
@@ -85,11 +86,11 @@
 
 #sc-stats .view-data .body .cell-number {
     float: right;
+    text-align: right;
 }
 
 #sc-stats .view-data span {
     display: inline-block;
     padding: 0.375em 0.5em;
 }
-
 
