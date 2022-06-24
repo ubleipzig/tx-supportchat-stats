@@ -18,6 +18,18 @@
                 <source>Chat history</source>
                 <target>Chatverlauf vom</target>
             </trans-unit>
+            <trans-unit id="module.chats.client">
+                <source>Client</source>
+                <target>KlientIn</target>
+            </trans-unit>
+            <trans-unit id="module.stats.date">
+                <source>Date</source>
+                <target>Datum</target>
+            </trans-unit>
+            <trans-unit id="module.stats.participants">
+                <source>Participants</source>
+                <target>TeilnehmerInnen</target>
+            </trans-unit>
             <trans-unit id="module.stats.title">
                 <source>Chat statistics</source>
                 <target>Chatstatistik</target>
@@ -145,6 +157,22 @@
             <trans-unit id="module.stats.chatsperweekday.title">
                 <source>Amount of chats per weekday</source>
                 <target>Anzahl der Chats nach Wochentagen</target>
+            </trans-unit>
+            <trans-unit id="module.stats.notice.no.data">
+                <source>There are no data available for requested search period.</source>
+                <target>Für den angegebenen Suchzeitraum existieren keine Daten zur Anzeige.</target>
+            </trans-unit>
+            <trans-unit id="module.stats.notice.no.data.title">
+                <source>No data available</source>
+                <target>Keine Daten vorhanden</target>
+            </trans-unit>
+            <trans-unit id="flashmessage.stats.date.inverted.title">
+                <source>Incorrect date range</source>
+                <target>Falscher Suchzeitraum</target>
+            </trans-unit>
+            <trans-unit id="flashmessage.stats.date.inverted">
+                <source>Selected date range is incorrect. Date of start have to be less than date of end.</source>
+                <target>Der ausgewählte Suchzeitraum ist falsch. Das Startdatum muss vor dem Ende liegen.</target>
             </trans-unit>
 
         </body>

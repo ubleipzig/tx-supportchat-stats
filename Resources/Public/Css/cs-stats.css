@@ -19,6 +19,8 @@
 #sc-stats #messages-table {
     display: table;
     table-layout: fixed;
+    float: left;
+    max-width: 66%;
 }
 
 #sc-stats #messages-header{
@@ -89,8 +91,23 @@
     text-align: right;
 }
 
+#sc-stats .view-data .body .cell-date {
+    text-align: justify;
+}
+
 #sc-stats .view-data span {
     display: inline-block;
     padding: 0.375em 0.5em;
 }
 
+#sc-stats .list-chats {
+    margin: 0 2em 0 0;
+    padding: 0;
+    float: right;
+    font-size: 1em;
+}
+
+#sc-stats .list-chats .header span:first-child,
+#sc-stats .list-chats .body span:first-child {
+    width: 8em;
+}

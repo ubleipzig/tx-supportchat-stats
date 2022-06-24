@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 /**
- * Class BaseAdministrationController
+ * Class StatsController
  *
  * Copyright (C) Leipzig University Library 2022 <info@ub.uni-leipzig.de>
  *
@@ -25,7 +25,6 @@ namespace Ubl\SupportchatStats\Controller;
 
 use Http\Exception\UnexpectedValueException;
 use TYPO3\CMS\Core\Context\Context;
-use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\VersionNumberUtility;
@@ -59,7 +58,7 @@ class StatsController extends BaseAbstractController
      * Get variables
      *
      * @var array|null $getVars
-     * @access protected
+     * @access private
      */
     private $getVars = null;
 
@@ -67,6 +66,8 @@ class StatsController extends BaseAbstractController
      * Set up the doc header properly here
      *
      * @param ViewInterface $view
+     *
+     * @access protected
      */
     protected function initializeView($view)
     {
@@ -74,15 +75,6 @@ class StatsController extends BaseAbstractController
         $pathToJsLibrary = GeneralUtility::getIndpEnv('TYPO3_SITE_URL')
             . ExtensionManagementUtility::siteRelPath('supportchat-stats') . 'Resources/Public/JavaScript/';
         $pageRenderer = $this->view->getModuleTemplate()->getPageRenderer();
-        /**  @todo Integrate datalabels to chart
-        $pageRenderer->addRequireJsConfiguration([
-            'paths' => [
-                'datalabels' => $pathToJsLibrary . 'libs/chartjs-plugin-datalabels.min.js'
-            ],
-            'shim' => [
-                'datalabels' => ['exports' => 'ChartDataLabels']
-            ]
-        ]);*/
         $pageRenderer->addJSInlineCode('supportchat-stats-chart', '
             require(["' . $pathToJsLibrary . 'libs/chartjs.min.js"], function(Chart){
                 Chart.defaults.font.size = 16;
@@ -98,6 +90,7 @@ class StatsController extends BaseAbstractController
      * Initializes the current action
      *
      * @return void
+     * @access public
      */
     public function indexAction()
     {
@@ -141,19 +134,19 @@ class StatsController extends BaseAbstractController
             'data' => $ret['result'],
             'statsSelect' => $stats,
             'statsOptions' => $this->getStatsOptions($statsMethods),
-            'periodParameter' => $this->getSelectPeriodParameter(),
+            'periodParameter' => $this->getPeriodParameter(),
         ]);
     }
 
     /**
      * Display chats per hours
      *
-     * @access public
-     * @return void
+     * @return array
+     * @access protected
      */
-    protected function chatsPerHour()
+    protected function chatsPerHour(): array
     {
-        $periodParams = $this->getSelectPeriodParameter();
+        $periodParams = $this->createPeriodParameterForSearch();
         $chatsPerHour = (false !== $periodParams)
             ? $this->chatsRepository->countChatsPerHour(
                 $this->getTimestamp($periodParams['start']),
@@ -175,12 +168,12 @@ class StatsController extends BaseAbstractController
     /**
      * Display chats per month
      *
-     * @access public
-     * @return void
+     * @return array
+     * @access protected
      */
-    protected function chatsPerMonth()
+    protected function chatsPerMonth(): array
     {
-        $periodParams = $this->getSelectPeriodParameter();
+        $periodParams = $this->createPeriodParameterForSearch();
         $chatsPerMonth = (false !== $periodParams)
             ? $this->chatsRepository->countChatsPerMonth(
                 $this->getTimestamp($periodParams['start']),
@@ -202,12 +195,13 @@ class StatsController extends BaseAbstractController
     /**
      * Display chat per weekday
      *
-     * @access public
-     * @return void
+     * @return array
+     * @access protected
+     * @throws \Exception
      */
     protected function chatsPerWeekday(): array
     {
-        $periodParams = $this->getSelectPeriodParameter();
+        $periodParams = $this->createPeriodParameterForSearch();
         $chatsPerWeekday = (false !== $periodParams)
             ? $this->chatsRepository->countChatsPerWeekday(
                 $this->getTimestamp($periodParams['start']),
@@ -229,8 +223,8 @@ class StatsController extends BaseAbstractController
     /**
      * Display content of a chat took place before
      *
-     * @access protected
      * @return array
+     * @access protected
      */
     protected function chatsPerYear(): array
     {
@@ -269,21 +263,42 @@ class StatsController extends BaseAbstractController
     /**
      * Get timestamps
      *
-     * @return bool|array    Return timestamps, if no set false
+     * @return array    Returns array with variables
      * @access private
+     * @throws \Http\Exception\UnexpectedValueException
      */
-    private function getSelectPeriodParameter()
+    private function getPeriodParameter(): array
     {
         if ($this->getVars == null) {
             throw new UnexpectedValueException('GET/POST parameters have to be evaluated by extension.');
         }
         $startDate = ($this->getVars["constraint"]["dateStart"]) ?: null;
-        $stopDate = ($this->getVars["constraint"]["dateStop"])
-            ? date("Y-m-d", strtotime($this->getVars["constraint"]["dateStop"])) . "T23:59:59Z" : null;
+        $stopDate = null;
+        // Set last point of period always to end of day.
+        if ($this->getVars["constraint"]["dateStop"]) {
+            $de = new \DateTime($this->getVars["constraint"]["dateStop"], new \DateTimeZone('UTC'));
+            $stopDate = $de->format('Y-m-d') . 'T23:59:59Z';
+        }
+        return [
+            'start' => $startDate,
+            'end' => $stopDate
+        ];
+    }
+
+    /**
+     * Creates and validate period parameters for search request.
+     *
+     * @return array|false
+     * @access private
+     * @throws \Exception
+     */
+    private function createPeriodParameterForSearch()
+    {
+        $period = $this->getPeriodParameter();
         // Evaluate if select with where on timestamps should be taken.
-        if (!$startDate && !$stopDate) {
+        if (!$period['start'] && !$period['end']) {
             return false;
-        } else if ($startDate && !$stopDate) {
+        } else if ($period['start'] && !$period['end']) {
             if ($this->isTypo3VersionCompatible("9.5.0")) {
                 $context = GeneralUtility::makeInstance(Context::class);
                 $timezone = $context->getPropertyFromAspect('date', 'timezone');
@@ -291,13 +306,24 @@ class StatsController extends BaseAbstractController
                 $timezone = ($GLOBALS['TYPO3_CONF_VARS']['SYS']['phpTimeZone']) ?: '';
             }
             $d = new \DateTime("now", new \DateTimeZone($timezone));
-            $stopDate = $d->format('Y-m-d\TH:i:s\Z');
-        } else if (!$startDate && $stopDate) {
-            $startDate = "1970-01-01T00:00:00Z";
+            $period['end'] = $d->format('Y-m-d\TH:i:s\Z');
+        } else if (!$period['start'] && $period['end']) {
+            $period['start'] = "1970-01-01T00:00:00Z";
+        } else {
+            // Validate if selected period is logical
+            if (false === $this->validatePeriodParameter(
+                new \DateTime($period['start']),
+                new \DateTime($period['end'])
+            )) {
+                $this->addFlashMessageHelper(
+                    'date.inverted',
+                    \TYPO3\CMS\Core\Messaging\FlashMessage::ERROR
+                );
+            }
         }
         return [
-          'start' => $startDate,
-          'end' => $stopDate,
+          'start' => $period['start'],
+          'end' => $period['end']
         ];
     }
 
@@ -308,6 +334,7 @@ class StatsController extends BaseAbstractController
      *
      * @return int
      * @access private
+     * @throws \Exception
      */
     private function getTimestamp(string $date): int
     {
@@ -321,6 +348,7 @@ class StatsController extends BaseAbstractController
      * @param string $version A valid typo3 version string for evaluation
      *
      * @return bool
+     * @static
      * @access private
      */
     private static function isTypo3VersionCompatible($version): bool
@@ -330,5 +358,19 @@ class StatsController extends BaseAbstractController
         }
         return VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version)
             >= VersionNumberUtility::convertVersionNumberToInteger($version);
+    }
+
+    /**
+     * Validate parameter of selected search period
+     *
+     * @param \DateTime $startDate
+     * @param \DateTime $endDate
+     *
+     * @return bool
+     * @access private
+     */
+    private function validatePeriodParameter(\DateTime $startDate, \DateTime $endDate): bool
+    {
+        return $startDate < $endDate;
     }
 }

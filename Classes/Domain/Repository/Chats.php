@@ -39,6 +39,14 @@ use Ubl\Supportchat\Domain\Repository\ChatsRepository;
 class Chats extends ChatsRepository
 {
     /**
+     * Chats repository name
+     *
+     * @var string $chatsRepository
+     * @access protected
+     */
+    protected $chatsRepository = "tx_supportchat_domain_model_chats";
+
+    /**
      * Get amount of chats per hour
      *
      * @param int $startTS
@@ -47,14 +55,14 @@ class Chats extends ChatsRepository
      * @return array
      * @access public
      */
-    public function countChatsPerHour(int $startTS = null, int $endTS = null)
+    public function countChatsPerHour(int $startTS = null, int $endTS = null): array
     {
-        $queryBuilder = $this->getConnectionForTable('tx_supportchat_chats');
+        $queryBuilder = $this->getConnectionForTable($this->chatsRepository);
         $queryBuilder->addSelectLiteral(
                 'DATE_FORMAT(FROM_UNIXTIME(crdate), "%H") AS hour',
                 $queryBuilder->expr()->count('*', 'cnt')
             )
-            ->from('tx_supportchat_chats')
+            ->from($this->chatsRepository)
             ->groupBy('hour');
         if ($startTS && $endTS) {
             $expr = $queryBuilder->expr();
@@ -75,14 +83,14 @@ class Chats extends ChatsRepository
      * @return array
      * @access public
      */
-    public function countChatsPerMonth(int $startTS = null, int $endTS = null)
+    public function countChatsPerMonth(int $startTS = null, int $endTS = null): array
     {
-        $queryBuilder = $this->getConnectionForTable('tx_supportchat_chats');
+        $queryBuilder = $this->getConnectionForTable($this->chatsRepository);
         $queryBuilder->addSelectLiteral(
                 'MONTH(FROM_UNIXTIME(crdate)) AS month',
                 $queryBuilder->expr()->count('*', 'cnt')
             )
-            ->from('tx_supportchat_chats')
+            ->from($this->chatsRepository)
             ->groupBy('month');
         if ($startTS && $endTS) {
             $expr = $queryBuilder->expr();
@@ -103,14 +111,14 @@ class Chats extends ChatsRepository
      * @return array
      * @access public
      */
-    public function countChatsPerWeekday(int $startTS = null, int $endTS = null)
+    public function countChatsPerWeekday(int $startTS = null, int $endTS = null): array
     {
-        $queryBuilder = $this->getConnectionForTable('tx_supportchat_chats');
-        return $queryBuilder->addSelectLiteral(
+        $queryBuilder = $this->getConnectionForTable($this->chatsRepository);
+        $queryBuilder->addSelectLiteral(
                 'WEEKDAY(FROM_UNIXTIME(crdate)) AS weekday',
                 $queryBuilder->expr()->count('*', 'cnt')
             )
-            ->from('tx_supportchat_chats')
+            ->from($this->chatsRepository)
             ->groupBy('weekday');
         if ($startTS && $endTS) {
             $expr = $queryBuilder->expr();
@@ -128,15 +136,15 @@ class Chats extends ChatsRepository
      * @return array
      * @access public
      */
-    public function countChatsPerYear()
+    public function countChatsPerYear(): array
     {
-        $queryBuilder = $this->getConnectionForTable('tx_supportchat_chats');
+        $queryBuilder = $this->getConnectionForTable($this->chatsRepository);
         return $queryBuilder
             ->addSelectLiteral(
                 'YEAR(FROM_UNIXTIME(crdate)) AS year',
                 $queryBuilder->expr()->count('*', 'cnt')
             )
-            ->from('tx_supportchat_chats')
+            ->from($this->chatsRepository)
             ->groupBy('year')
             ->execute()
             ->fetchAll();

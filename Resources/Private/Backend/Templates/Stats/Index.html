@@ -6,55 +6,59 @@
         <!-- Select chart -->
         <div class="form-group">
             <label for="statsSelect"><f:translate key="module.stats.chart.select" extensionName="supportchat-stats"/></label>
-                <f:form.select name="statsSelect" options="{statsOptions}" value="{statsSelect}"></f:form.select>
+                <f:form.select name="statsSelect" options="{statsOptions}" value="{statsSelect}" additionalAttributes="{onchange: 'this.form.submit()'}"></f:form.select>
         </div>
 
-        <!-- Date start -->
-        <div class="form-group">
-            <label for="dateStart"><f:translate key="module.stats.datepicker.start" extensionName="supportchat-stats"/></label>
-            <div class="input-group input-group-sm">
-                <f:form.textfield
-                    id="dateStart"
-                    name="dateStart"
-                    value="{f:if(condition: periodParameter.start, then: \"{f:format.date(format:'d.m.Y', date: '{periodParameter.start}')}\")}"
-                    additionalAttributes="{'autocomplete': 'off'}"
-                    class="form-control input-sm t3js-datetimepicker t3js-clearable"
-                    data="{date-type: 'date'}"
-                />
-                <f:form.hidden
-                    property="dateStart"
-                    value="{periodParameter.start}"
-                />
-                <span class="input-group-btn">
-                    <label class="btn btn-default" for="dateStart">
-                        <span class="fa fa-calendar"></span>
-                    </label>
-                </span>
-            </div>
-        </div>
-        <!-- Date end -->
-        <div class="form-group">
-            <label for="dateStop"><f:translate key="module.stats.datepicker.end" extensionName="supportchat-stats"/></label>
-            <div class="input-group input-group-sm">
-                <f:form.textfield
-                        id="dateStop"
-                        name="dateStop"
-                        value="{f:if(condition: periodParameter.end, then: \"{f:format.date(format:'d.m.Y', date: '{periodParameter.end}- 2 hours')}\")}"
+        <!-- Does not display datepicker by chats per year view -->
+        <f:if condition="{statsSelect}!='chatsPerYear'">
+            <!-- Date start -->
+            <div class="form-group">
+                <label for="dateStart"><f:translate key="module.stats.datepicker.start" extensionName="supportchat-stats"/></label>
+                <div class="input-group input-group-sm">
+                    <f:form.textfield
+                        id="dateStart"
+                        name="dateStart"
+                        value="{f:if(condition: periodParameter.start, then: \"{f:format.date(format:'d.m.Y', date: '{periodParameter.start}')}\")}"
                         additionalAttributes="{'autocomplete': 'off'}"
                         class="form-control input-sm t3js-datetimepicker t3js-clearable"
                         data="{date-type: 'date'}"
-                />
-                <f:form.hidden
-                        property="dateStop"
-                        value="{periodParameter.end}"
-                />
-                <span class="input-group-btn">
-                    <label class="btn btn-default" for="dateStop">
-                        <span class="fa fa-calendar"></span>
-                    </label>
-                </span>
+                    />
+                    <f:form.hidden
+                        property="dateStart"
+                        value="{periodParameter.start}"
+                    />
+                    <span class="input-group-btn">
+                        <label class="btn btn-default" for="dateStart">
+                            <span class="fa fa-calendar"></span>
+                        </label>
+                    </span>
+                </div>
             </div>
-        </div>
+            <!-- Date end -->
+            <div class="form-group">
+                <label for="dateStop"><f:translate key="module.stats.datepicker.end" extensionName="supportchat-stats"/></label>
+                <div class="input-group input-group-sm">
+                    <f:form.textfield
+                            id="dateStop"
+                            name="dateStop"
+                            value="{f:if(condition: periodParameter.end, then: \"{f:format.date(format:'d.m.Y', date: '{periodParameter.end}- 2 hours')}\")}"
+                            additionalAttributes="{'autocomplete': 'off'}"
+                            class="form-control input-sm t3js-datetimepicker t3js-clearable"
+                            data="{date-type: 'date'}"
+                    />
+                    <f:form.hidden
+                            property="dateStop"
+                            value="{periodParameter.end}"
+                    />
+                    <span class="input-group-btn">
+                        <label class="btn btn-default" for="dateStop">
+                            <span class="fa fa-calendar"></span>
+                        </label>
+                    </span>
+                </div>
+            </div>
+        <!-- End: Does not display datepicker by chats per year view -->
+        </f:if>
         <!-- Submit Button -->
         <div class="form-group">
             <f:form.submit id="submit-constraint" value="{f:translate(key: 'module.stats.datepicker.submit', extensionName:'supportchat-stats')}" class="btn btn-default btn-sm" />
@@ -67,10 +71,26 @@
 </f:section>
 
 <f:section name="content">
-    <div class="view-chart">
-        <canvas id="sc-stats-chart" aria-label="" role="img"></canvas>
-        <f:format.raw>{jsChartCode}</f:format.raw>
-    </div>
-    <f:variable name="partialTableView"><f:format.case mode="capital">{statsSelect}</f:format.case></f:variable>
-    <f:render partial="TableView/{partialTableView}" arguments="{data: data}" />
+    <f:if condition="{data.0}">
+        <f:then>
+            <div class="view-chart">
+                <canvas id="sc-stats-chart" aria-label="" role="img"></canvas>
+                <f:format.raw>{jsChartCode}</f:format.raw>
+            </div>
+            <f:variable name="partialTableView"><f:format.case mode="capital">{statsSelect}</f:format.case></f:variable>
+            <f:render partial="TableView/{partialTableView}" arguments="{data: data}" />
+        </f:then>
+        <f:else>
+            <div class="alert alert-info alert-dismissible">
+                <div class="media">
+                    <h4 class="alert-title">
+                        <f:translate key="module.stats.notice.no.data.title" extensionName="supportchat-stats" />
+                    </h4>
+                    <p class="alert-message">
+                        <f:translate key="module.stats.notice.no.data" extensionName="supportchat-stats" />
+                    </p>
+                </div>
+            </div>
+        </f:else>
+    </f:if>
 </f:section>

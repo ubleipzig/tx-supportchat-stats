@@ -65,5 +65,29 @@ class ChatsController extends BaseAbstractController
         $this->view->assign('previousId', $chatPids[$currentKey+1]);
         $this->view->assign('subsequentTenIds', $chatPids[$currentKey-10]);
         $this->view->assign('previousTenIds', $chatPids[$currentKey+10]);
+        $this->view->assign(
+            'listAllChats',
+            $this->getChatsByDayAndPid($this->messagesRepository->listAllChats())
+        );
+    }
+
+    /**
+     * Grouped list of chats by date and chat pid
+     *
+     * @param $listOfChats
+     *
+     * @return array $listOfChatsPerDay
+     * @access private
+     */
+    private function getChatsByDayAndPid($listOfChats): array
+    {
+        $listOfChatsPerDay = [];
+        foreach ($listOfChats as $chat)
+        {
+            $listOfChatsPerDay[$chat['day']][$chat['chat_pid']][] =
+                ($chat['name'] !== "" XOR $chat['name'] === "Gast")
+                    ? $chat['name'] : $this->translate("module.chats.client");
+        }
+        return $listOfChatsPerDay;
     }
 }

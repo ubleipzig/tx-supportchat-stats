@@ -77,8 +77,8 @@ abstract class BaseAbstractController extends ActionController
      * Initializes the module
      *
      * @return void
+     * @access public
      * @throws \Exception    If no chat pid given.
-     *
      */
     public function initializeAction()
     {
@@ -108,8 +108,8 @@ abstract class BaseAbstractController extends ActionController
     /**
      * Create menu
      *
-     * @access protected
      * @return void
+     * @access protected
      */
     protected function createMenu()
     {
@@ -142,11 +142,35 @@ abstract class BaseAbstractController extends ActionController
     }
 
     /**
+     * Helper function to render localized flashmessages
+     *
+     * @param string  $keyFragment
+     * @param integer $severity [optional] Severity code. One of the t3lib_FlashMessage constants
+     *
+     * @return void
+     * @access public
+     */
+    public function addFlashMessageHelper($keyFragment, $severity = \TYPO3\CMS\Core\Messaging\FlashMessage::OK)
+    {
+        $messageLocaleKey = sprintf(
+            'flashmessage.%s.%s',
+            strtolower($this->request->getControllerName()),
+            $keyFragment
+        );
+        $localizedMessage = $this->translate($messageLocaleKey);
+        $titleLocaleKey = sprintf('%s.title', $messageLocaleKey);
+        $localizedTitle = $this->translate($titleLocaleKey);
+        $this->addFlashMessage($localizedMessage, $localizedTitle, $severity);
+    }
+
+    /**
      * Translate label
      *
      * @param string $key
      * @param array|null $arguments
+     *
      * @return string
+     * @access protected
      */
     protected function translate(string $key, array $arguments = null): string
     {

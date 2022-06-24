@@ -15,6 +15,15 @@
             <trans-unit id="module.chats.title">
                 <source>Chat history from</source>
             </trans-unit>
+            <trans-unit id="module.chats.client">
+                <source>Client</source>
+            </trans-unit>
+            <trans-unit id="module.stats.date">
+                <source>Date</source>
+            </trans-unit>
+            <trans-unit id="module.stats.participants">
+                <source>Participants</source>
+            </trans-unit>
             <trans-unit id="module.stats.title">
                 <source>Chat statistics</source>
             </trans-unit>
@@ -66,7 +75,6 @@
             <trans-unit id="module.stats.month1">
                 <source>January</source>
             </trans-unit>
-
             <trans-unit id="module.stats.hour">
                 <source>Hour</source>
             </trans-unit>
@@ -117,6 +125,18 @@
             </trans-unit>
             <trans-unit id="module.stats.chatsperweekday.title">
                 <source>Amount of chats per weekday</source>
+            </trans-unit>
+            <trans-unit id="module.stats.notice.no.data">
+                <source>There are no data available for requested search period to display.</source>
+            </trans-unit>
+            <trans-unit id="module.stats.notice.no.data.title">
+                <source>No data available</source>
+            </trans-unit>
+            <trans-unit id="flashmessage.stats.date.inverted.title">
+                <source>Incorrect date range</source>
+            </trans-unit>
+            <trans-unit id="flashmessage.stats.date.inverted">
+                <source>Selected date range is incorrect. Date of start have to be less than date of end.</source>
             </trans-unit>
         </body>
     </file>

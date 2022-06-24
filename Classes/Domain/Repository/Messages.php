@@ -39,17 +39,25 @@ use Ubl\Supportchat\Domain\Repository\MessagesRepository;
 class Messages extends MessagesRepository
 {
     /**
+     * Messages repository name
+     *
+     * @var string $messagesRepository
+     * @access protected
+     */
+    protected $messagesRepository = "tx_supportchat_domain_model_messages";
+
+    /**
      * Find all chat pids in table
      *
-     * @return object
+     * @return array
      * @access public
      */
-    public function findAllChatPids()
+    public function findAllChatPids(): array
     {
-        $queryBuilder = $this->getConnectionForTable('tx_supportchat_messages');
+        $queryBuilder = $this->getConnectionForTable($this->messagesRepository);
         return $queryBuilder
             ->select('chat_pid')
-            ->from('tx_supportchat_messages')
+            ->from($this->messagesRepository)
             ->groupBy('chat_pid')
             ->orderBy('chat_pid', 'DESC')
             ->execute()
@@ -61,21 +69,42 @@ class Messages extends MessagesRepository
      *
      * @param int $chatPid
      *
-     * @return object
+     * @return array
      * @access public
      */
-    public function findMessagesByChatPid(int $chatPid)
+    public function findMessagesByChatPid(int $chatPid): array
     {
-        $queryBuilder = $this->getConnectionForTable('tx_supportchat_messages');
+        $queryBuilder = $this->getConnectionForTable($this->messagesRepository);
         return $queryBuilder
             ->select('name', 'message', 'tstamp')
-            ->from('tx_supportchat_messages')
+            ->from($this->messagesRepository)
             ->where(
                 $queryBuilder->expr()->eq(
                     'chat_pid',
                     $queryBuilder->createNamedParameter($chatPid, \PDO::PARAM_INT)
             ))
             ->orderBy('tstamp', 'ASC')
+            ->execute()
+            ->fetchAll();
+    }
+
+    /**
+     * List all chats grouped by day and participants
+     *
+     * @return array
+     * @access public
+     */
+    public function listAllChats(): array
+    {
+        $queryBuilder = $this->getConnectionForTable($this->messagesRepository);
+        return $queryBuilder
+            ->addSelectLiteral(
+                'FROM_UNIXTIME(tstamp,"%Y-%m-%d") as day',
+                'chat_pid',
+                'name'
+            )
+            ->from($this->messagesRepository)
+            ->add('groupBy', 'day DESC, chat_pid DESC, name')
             ->execute()
             ->fetchAll();
     }
