@@ -17,7 +17,7 @@ Displays chat history and statistics for Typo3 extension [Supportchat][1]
 
 ### Installation using Composer
 
-Best practise is installing the extension by using [Composer][2]. In your Composer based TYPO3 project root, just do `composer require ubleipzig/tx-supportchat`.
+Best practise is installing the extension by using [Composer][2]. In your Composer based TYPO3 project root, just do `composer require ubleipzig/tx-supportchat-stats`.
 
 ### Installation as extension from TYPO3 Extension Repository (TER)
 
