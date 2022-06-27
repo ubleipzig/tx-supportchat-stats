@@ -2,31 +2,39 @@
 <f:layout name="Default" />
 
 <f:section name="nav">
-    <!-- previous id -->
-    <f:if condition="{previousTenIds}">
-        <f:link.action action="display" arguments="{chatId : previousTenIds}" additionalAttributes="{class:'nav-paginator'}"><<</f:link.action>
-    </f:if>
-    <f:if condition="{previousId}">
-        <f:link.action action="display" arguments="{chatId : previousId}" additionalAttributes="{class:'nav-paginator'}"><</f:link.action>
-    </f:if>
-    <!-- current id -->
-    <span class="nav-current">
-        <f:translate key="module.chats.id" extensionName="supportchat-stats"/>: {currentId}
-    </span>
-    <!-- next id -->
-    <f:if condition="{subsequentId}">
-        <f:link.action action="display" arguments="{chatId : subsequentId}" additionalAttributes="{class:'nav-paginator'}">></f:link.action>
-    </f:if>
-    <f:if condition="{subsequentTenIds}">
-        <f:link.action action="display" arguments="{chatId : subsequentTenIds}" additionalAttributes="{class:'nav-paginator'}">>></f:link.action>
+    <f:if condition="{listAllChats}">
+        <f:then>
+            <!-- previous id -->
+            <f:if condition="{previousTenIds}">
+                <f:link.action action="display" arguments="{chatId : previousTenIds}" additionalAttributes="{class:'nav-paginator'}"><<</f:link.action>
+            </f:if>
+            <f:if condition="{previousId}">
+                <f:link.action action="display" arguments="{chatId : previousId}" additionalAttributes="{class:'nav-paginator'}"><</f:link.action>
+            </f:if>
+            <!-- current id -->
+            <span class="nav-current">
+                <f:translate key="module.chats.id" extensionName="supportchat-stats"/>: {currentId}
+            </span>
+            <!-- next id -->
+            <f:if condition="{subsequentId}">
+                <f:link.action action="display" arguments="{chatId : subsequentId}" additionalAttributes="{class:'nav-paginator'}">></f:link.action>
+            </f:if>
+            <f:if condition="{subsequentTenIds}">
+                <f:link.action action="display" arguments="{chatId : subsequentTenIds}" additionalAttributes="{class:'nav-paginator'}">>></f:link.action>
+            </f:if>
+        </f:then>
     </f:if>
 </f:section>
 
 <f:section name="headline">
-    <h3>
-        <f:translate key="module.chats.title" extensionName="supportchat-stats"/>
-        <f:format.date format="d.m.Y">{messages.0.tstamp}</f:format.date>
-    </h3>
+    <f:if condition="{listAllChats}">
+        <f:then>
+            <h3>
+                <f:translate key="module.chats.title" extensionName="supportchat-stats"/>
+                <f:format.date format="d.m.Y">{messages.0.tstamp}</f:format.date>
+            </h3>
+        </f:then>
+    </f:if>
 </f:section>
 
 <f:section name="content">

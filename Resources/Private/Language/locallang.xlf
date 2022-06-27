@@ -126,10 +126,16 @@
             <trans-unit id="module.stats.chatsperweekday.title">
                 <source>Amount of chats per weekday</source>
             </trans-unit>
-            <trans-unit id="module.stats.notice.no.data">
+            <trans-unit id="flashmessage.chats.notice.no.data">
                 <source>There are no data available for requested search period to display.</source>
             </trans-unit>
-            <trans-unit id="module.stats.notice.no.data.title">
+            <trans-unit id="flashmessage.chats.notice.no.data.title">
+                <source>No data available</source>
+            </trans-unit>
+            <trans-unit id="flashmessage.stats.notice.no.data">
+                <source>There are no data to display for chat history.</source>
+            </trans-unit>
+            <trans-unit id="flashmessage.stats.notice.no.data.title">
                 <source>No data available</source>
             </trans-unit>
             <trans-unit id="flashmessage.stats.date.inverted.title">

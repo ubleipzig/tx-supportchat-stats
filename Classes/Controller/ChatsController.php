@@ -81,6 +81,12 @@ class ChatsController extends BaseAbstractController
      */
     private function getChatsByDayAndPid($listOfChats): array
     {
+        if (count($listOfChats) == 0) {
+            $this->addFlashMessageHelper(
+                'notice.no.data',
+                \TYPO3\CMS\Core\Messaging\FlashMessage::INFO
+            );
+        }
         $listOfChatsPerDay = [];
         foreach ($listOfChats as $chat)
         {

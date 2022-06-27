@@ -1,22 +1,26 @@
 {namespace ubl=Ubl\SupportchatStats\ViewHelpers}
-<div class="view-data list-chats">
-    <div class="header">
-        <span><f:translate key="module.stats.date" extensionName="supportchat-stats"/></span>
-        <span><f:translate key="module.stats.participants" extensionName="supportchat-stats"/></span>
-    </div>
-    <f:for each="{data}" as="item" key="day">
-        <f:for each="{item}" as="participants" key="pid">
-        <div class="body">
-            <span class="cell-date">
-                <f:if condition="{day} != {dayBefore}">
-                    <f:then><f:format.date format="d.m.Y">{day}</f:format.date></f:then>
-                    <f:else>&nbsp;</f:else></f:if>
-            </span>
-            <span class="cell-string">
-                <f:link.action action="display" arguments="{chatId : pid}">{ubl:formatImplode(list: participants)}</f:link.action>
-            </span>
+<f:if condition="{data}">
+    <f:then>
+        <div class="view-data list-chats">
+            <div class="header">
+                <span><f:translate key="module.stats.date" extensionName="supportchat-stats"/></span>
+                <span><f:translate key="module.stats.participants" extensionName="supportchat-stats"/></span>
+            </div>
+            <f:for each="{data}" as="item" key="day">
+                <f:for each="{item}" as="participants" key="pid">
+                <div class="body">
+                    <span class="cell-date">
+                        <f:if condition="{day} != {dayBefore}">
+                            <f:then><f:format.date format="d.m.Y">{day}</f:format.date></f:then>
+                            <f:else>&nbsp;</f:else></f:if>
+                    </span>
+                    <span class="cell-string">
+                        <f:link.action action="display" arguments="{chatId : pid}">{ubl:formatImplode(list: participants)}</f:link.action>
+                    </span>
+                </div>
+                    <f:variable name="dayBefore">{day}</f:variable>
+                </f:for>
+            </f:for>
         </div>
-            <f:variable name="dayBefore">{day}</f:variable>
-        </f:for>
-    </f:for>
-</div>
+    </f:then>
+</f:if>
