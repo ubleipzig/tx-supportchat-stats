@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Ubl\SupportchatStats\Controller;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Annotation as Extbase;
 
 /**
  * Class ChatsController
@@ -39,7 +40,7 @@ class ChatsController extends BaseAbstractController
      * messagesRepository
      *
      * @var \Ubl\SupportchatStats\Domain\Repository\Messages
-     * @inject
+     * @Extbase\Inject
      */
     protected $messagesRepository;
 

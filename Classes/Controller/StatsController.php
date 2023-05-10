@@ -24,10 +24,15 @@ declare(strict_types=1);
 namespace Ubl\SupportchatStats\Controller;
 
 use Http\Exception\UnexpectedValueException;
+use TYPO3\CMS\Backend\Routing\Exception\ResourceNotFoundException;
+use TYPO3\CMS\Backend\Routing\Router;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\PathUtility;
 use TYPO3\CMS\Core\Utility\VersionNumberUtility;
+use TYPO3\CMS\Extbase\Annotation as Extbase;
+
 
 /**
  * Class ChatsController
@@ -42,7 +47,7 @@ class StatsController extends BaseAbstractController
      * messagesRepository
      *
      * @var \Ubl\SupportchatStats\Domain\Repository\Chats
-     * @inject
+     * @Extbase\Inject
      */
     protected $chatsRepository;
 
@@ -73,7 +78,7 @@ class StatsController extends BaseAbstractController
     {
         parent::initializeView($view);
         $pathToJsLibrary = GeneralUtility::getIndpEnv('TYPO3_SITE_URL')
-            . ExtensionManagementUtility::siteRelPath('supportchat-stats') . 'Resources/Public/JavaScript/';
+            . PathUtility::stripPathSitePrefix(ExtensionManagementUtility::extPath('supportchat-stats')) . 'Resources/Public/JavaScript/';
         $pageRenderer = $this->view->getModuleTemplate()->getPageRenderer();
         $pageRenderer->addJSInlineCode('supportchat-stats-chart', '
             require(["' . $pathToJsLibrary . 'libs/chartjs.min.js"], function(Chart){
@@ -94,7 +99,9 @@ class StatsController extends BaseAbstractController
      */
     public function indexAction()
     {
-        $this->getVars = GeneralUtility::_GP($this->extensionNamespace . '_' . strtolower(GeneralUtility::_GP('M')));
+        $this->getVars = GeneralUtility::_GP(
+            $this->extensionNamespace . '_' . self::getModuleName()
+        );
         $classNames = get_class_methods($this);
         foreach ($classNames as $name) {
             if (0 < preg_match('/^chats\w*$/', $name)) {
@@ -265,12 +272,12 @@ class StatsController extends BaseAbstractController
      *
      * @return array    Returns array with variables
      * @access private
-     * @throws \Http\Exception\UnexpectedValueException
+     * @throws Http\Exception\UnexpectedValueException
      */
     private function getPeriodParameter(): array
     {
         if ($this->getVars == null) {
-            throw new UnexpectedValueException('GET/POST parameters have to be evaluated by extension.');
+            throw new \UnexpectedValueException('GET/POST parameters have to be evaluated by extension.');
         }
         $startDate = ($this->getVars["constraint"]["dateStart"]) ?: null;
         $stopDate = null;
@@ -325,6 +332,29 @@ class StatsController extends BaseAbstractController
           'start' => $period['start'],
           'end' => $period['end']
         ];
+    }
+
+    /**
+     * Get module name
+     *
+     * @return string
+     * @access private
+     * @throws ResourceNotFoundException
+     * @throws \UnexpectedValueException
+     */
+    private static function getModuleName(): string
+    {
+        if (GeneralUtility::_GET('route') !== null) {
+            $routePath = (string)GeneralUtility::_GET('route');
+            $router = GeneralUtility::makeInstance(Router::class);
+            try {
+                $route = $router->match($routePath);
+                return strtolower($route->getOption('_identifier'));
+            } catch (ResourceNotFoundException $exception) {
+                unset($exception);
+            }
+        }
+        throw new \UnexpectedValueException('No parameter "route" has been assigned for GET request.');
     }
 
     /**

@@ -4,7 +4,7 @@ if (!defined('TYPO3_MODE')) {
     die('Access denied.');
 }
 
-$boot = function () {
+(function () {
 
     if (TYPO3_MODE === 'BE') {
         /* ===========================================================================
@@ -37,7 +37,4 @@ $boot = function () {
         'EXT:supportchat-stats/Resources/Private/Language/locallang.xlf'
     );
 
-};
-
-$boot();
-unset($boot);
+})();
